@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { MikroORM } from '@mikro-orm/core';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
+import { User } from './users.entity';
 
 @Injectable()
 export class UsersService {
@@ -18,8 +18,9 @@ export class UsersService {
     return userRepository.findAll();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOneById(id: number) {
+    const userRepository = this.orm.em.getRepository(User);
+    return userRepository.findOne({ id });
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
