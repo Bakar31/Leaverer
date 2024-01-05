@@ -1,33 +1,30 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@nestjs/common';
 import { MikroORM } from '@mikro-orm/core';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './users.entity';
+import { UserRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly orm: MikroORM) {}
-
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
-  }
+  constructor(
+    private readonly orm: MikroORM,
+    private readonly userRepository: UserRepository,
+  ) {}
 
   async getAllUsers(): Promise<User[]> {
-    const userRepository = this.orm.em.getRepository(User);
-    return userRepository.findAll();
+    return this.userRepository.findAllUsers();
   }
 
   async findOneById(id: number) {
-    const userRepository = this.orm.em.getRepository(User);
-    return userRepository.findOne({ id });
+    return this.userRepository.findOneById(id);
+  }
+
+  async findUserByEmail(email: string) {
+    return this.userRepository.findUserByEmail(email);
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+    return this.userRepository.updateUser(id, updateUserDto);
   }
 }
