@@ -1,12 +1,11 @@
 import { MikroORM } from '@mikro-orm/core';
 import { User } from './users.entity';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { NotFoundException } from '@nestjs/common';
 
 export class UserRepository {
   constructor(private readonly orm: MikroORM) {}
 
-  async findAllUsers(): Promise<User[]> {
+  async findAll(): Promise<User[]> {
     const userRepository = this.orm.em.getRepository(User);
     return userRepository.findAll();
   }
@@ -20,7 +19,7 @@ export class UserRepository {
     return user;
   }
 
-  async findUserByEmail(email: string): Promise<User | null> {
+  async findOneByEmail(email: string): Promise<User | null> {
     const userRepository = this.orm.em.getRepository(User);
     const user = await userRepository.findOne({ email });
     if (!user) {
@@ -29,14 +28,14 @@ export class UserRepository {
     return user;
   }
 
-  async updateUser(id: number, updateUserDto: UpdateUserDto): Promise<string> {
+  async update(id: number, data: Partial<User>): Promise<User> {
     const userRepository = this.orm.em.getRepository(User);
     const user = await userRepository.findOne({ id });
     if (!user) {
-      return `User with ID ${id} not found`;
+      return null;
     }
-    userRepository.assign(user, updateUserDto);
+    userRepository.assign(user, data);
     await userRepository.flush();
-    return `User with ID ${id} updated successfully`;
+    return user;
   }
 }

@@ -7,24 +7,25 @@ import { UserRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    private readonly orm: MikroORM,
-    private readonly userRepository: UserRepository,
-  ) {}
+  private userRepository: UserRepository;
+  constructor(private readonly orm: MikroORM) {
+    this.userRepository = new UserRepository(this.orm);
+  }
 
   async getAllUsers(): Promise<User[]> {
-    return this.userRepository.findAllUsers();
+    return this.userRepository.findAll();
   }
 
-  async findOneById(id: number) {
-    return this.userRepository.findOneById(id);
-  }
-
-  async findUserByEmail(email: string) {
-    return this.userRepository.findUserByEmail(email);
+  async getUser(identifier: string) {
+    if (!isNaN(Number(identifier))) {
+      const id = Number(identifier);
+      return this.userRepository.findOneById(id);
+    } else {
+      return this.userRepository.findOneByEmail(identifier);
+    }
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
-    return this.userRepository.updateUser(id, updateUserDto);
+    return this.userRepository.update(id, updateUserDto);
   }
 }

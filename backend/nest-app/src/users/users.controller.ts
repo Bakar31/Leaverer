@@ -8,18 +8,18 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  async getAllUsers() {
+  async users() {
     return this.usersService.getAllUsers();
   }
 
   @Get(':id')
-  async getOneById(@Param('id') id: string) {
-    return this.usersService.findOneById(+id);
+  async getUserById(@Param('id') id: string) {
+    return this.usersService.getUser(id);
   }
 
   @Get('email/:email')
-  async findOneByEmail(@Param('email') email: string) {
-    return this.usersService.findUserByEmail(email);
+  async getUserByEmail(@Param('email') email: string) {
+    return this.usersService.getUser(email);
   }
 
   @Patch(':id')
