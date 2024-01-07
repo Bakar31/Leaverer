@@ -1,11 +1,12 @@
-/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable @next/next/no-img-element */
+/* eslint-disable react/no-unescaped-entities */
 "use client";
 
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 interface User {
   email: string;
@@ -33,7 +34,7 @@ const SignIn = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:3001/auth/login", formData, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/login`, formData, {
       withCredentials: true,
       headers: {
         "Content-Type": "application/json",

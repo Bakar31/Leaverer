@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 interface UserProfile {
   id: number;
@@ -13,6 +14,16 @@ const Profile = () => {
   const [profileData, setProfileData] = useState<UserProfile | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editedProfile, setEditedProfile] = useState<UserProfile | null>(null);
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("profileData");
+    setProfileData(null);
+    setEditedProfile(null);
+    setIsEditing(false);
+    router.push("/user/sign-in");
+  };
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -23,7 +34,7 @@ const Profile = () => {
 
         if (!storedProfileData && accessToken) {
           const response = await axios.get<UserProfile>(
-            "http://localhost:3001/profile",
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/profile`,
             {
               headers: {
                 Authorization: `Bearer ${accessToken}`,
@@ -65,7 +76,7 @@ const Profile = () => {
     try {
       if (accessToken && editedProfile) {
         const response = await axios.patch(
-          `http://localhost:3001/users/${editedProfile.id}`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/users/${editedProfile.id}`,
           editedProfile,
           {
             headers: {
@@ -138,7 +149,7 @@ const Profile = () => {
                 </div>
               </div>
             ) : (
-              <div>
+              <div className="flex flex-col gap-2">
                 <h2 className="font-semibold">Profile info:</h2>
                 <p className="mb-2">UserId: {profileData.id}</p>
                 <p className="mb-2">Name: {profileData.name}</p>
@@ -148,6 +159,12 @@ const Profile = () => {
                   onClick={handleEditButtonClick}
                 >
                   Edit Profile
+                </button>
+                <button
+                  className="px-6 py-2 mb-4 text-black bg-red-300 rounded-md focus:outline-none hover:bg-red-600"
+                  onClick={handleLogout}
+                >
+                  Logout
                 </button>
               </div>
             )}
