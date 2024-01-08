@@ -1,13 +1,15 @@
 /* eslint-disable prettier/prettier */
 import { defineConfig } from '@mikro-orm/postgresql';
 import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 export default defineConfig({
-  host: 'localhost',
-  port: 5432,
-  user: 'postgres',
-  password: '1808031',
-  dbName: 'nest',
+  host: process.env.HOST,
+  port: Number(process.env.PORT),
+  user: process.env.USER,
+  password: process.env.PASSWORD,
+  dbName: process.env.DBNAME,
   entities: ['dist/**/*.entity.js'],
   entitiesTs: ['src/**/*.entity.ts'],
   debug: true,
