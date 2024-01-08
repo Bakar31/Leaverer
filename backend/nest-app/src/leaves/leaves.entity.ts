@@ -1,0 +1,29 @@
+import { Entity, PrimaryKey, Property, ManyToOne } from '@mikro-orm/core';
+import { User } from 'src/users/users.entity';
+
+@Entity()
+export class Leave {
+  @PrimaryKey()
+  id!: string;
+
+  @ManyToOne(() => User)
+  user!: User;
+
+  @Property()
+  approvedBy!: number;
+
+  @Property()
+  date!: Date;
+
+  @Property()
+  type!: string;
+
+  @Property()
+  reason?: string;
+
+  @Property()
+  createdAt: Date = new Date();
+
+  @Property()
+  updatedAt: Date = new Date();
+}
