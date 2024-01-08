@@ -1,8 +1,9 @@
-"use client";
+"use client"
 
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 interface UserProfile {
   id: number;
@@ -11,51 +12,25 @@ interface UserProfile {
 }
 
 const Profile = () => {
-  const [profileData, setProfileData] = useState<UserProfile | null>(null);
+  const { state: authState, dispatch } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [editedProfile, setEditedProfile] = useState<UserProfile | null>(null);
   const router = useRouter();
 
   const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("profileData");
-    setProfileData(null);
+    dispatch({ type: 'LOGOUT' });
     setEditedProfile(null);
     setIsEditing(false);
     router.push("/user/sign-in");
   };
 
   useEffect(() => {
-    const fetchProfileData = async () => {
-      const accessToken = localStorage.getItem("accessToken");
-
-      try {
-        let storedProfileData = localStorage.getItem("profileData");
-
-        if (!storedProfileData && accessToken) {
-          const response = await axios.get<UserProfile>(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/profile`,
-            {
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
-            }
-          );
-
-          setProfileData(response.data);
-          setEditedProfile(response.data);
-          localStorage.setItem("profileData", JSON.stringify(response.data));
-        } else {
-          setProfileData(JSON.parse(storedProfileData!));
-          setEditedProfile(JSON.parse(storedProfileData!));
-        }
-      } catch (error) {
-        console.error("Error fetching profile:", error);
-      }
-    };
-
-    fetchProfileData();
-  }, []);
+    if (!authState.isAuthenticated) {
+      router.push("/user/sign-in");
+      return;
+    }
+    setEditedProfile(authState.user);
+  }, [authState.isAuthenticated, authState.user, router]);
 
   const handleEditButtonClick = () => {
     setIsEditing(true);
@@ -71,26 +46,23 @@ const Profile = () => {
   };
 
   const handleSaveButtonClick = async () => {
-    const accessToken = localStorage.getItem("accessToken");
-
     try {
-      if (accessToken && editedProfile) {
-        const response = await axios.patch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/users/${editedProfile.id}`,
-          editedProfile,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
+      const response = await axios.patch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/users/${editedProfile?.id}`,
+        editedProfile,
+        {
+          headers: {
+            Authorization: `Bearer ${authState.accessToken}`,
+          },
+        }
+      );
 
-        setProfileData(response.data);
-        setEditedProfile(response.data);
-        setIsEditing(false);
+      dispatch({
+        type: 'UPDATE_USER',
+        user: response.data,
+      });
 
-        localStorage.setItem("profileData", JSON.stringify(response.data));
-      }
+      setIsEditing(false);
     } catch (error) {
       console.error("Error updating profile:", error);
     }
@@ -98,10 +70,10 @@ const Profile = () => {
 
   return (
     <div className="p-6 max-w-md mx-auto bg-white rounded-md shadow-md">
-      {profileData ? (
+      {authState.user ? (
         <div>
           <h1 className="text-2xl font-bold mb-4">
-            Welcome, {profileData.name}
+            Welcome, {authState.user.name}
           </h1>
           <hr className="mb-4" />
           <div>
@@ -151,9 +123,9 @@ const Profile = () => {
             ) : (
               <div className="flex flex-col gap-2">
                 <h2 className="font-semibold">Profile info:</h2>
-                <p className="mb-2">UserId: {profileData.id}</p>
-                <p className="mb-2">Name: {profileData.name}</p>
-                <p className="mb-2">Email: {profileData.email}</p>
+                <p className="mb-2">UserId: {authState.user.id}</p>
+                <p className="mb-2">Name: {authState.user.name}</p>
+                <p className="mb-2">Email: {authState.user.email}</p>
                 <button
                   className="px-6 py-2 mt-4 text-black bg-green-300 rounded-md focus:outline-none hover:bg-primary-600"
                   onClick={handleEditButtonClick}

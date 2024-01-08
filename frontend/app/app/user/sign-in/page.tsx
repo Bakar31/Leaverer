@@ -4,9 +4,13 @@
 
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 import axios from "axios";
-import * as dotenv from 'dotenv';
+import * as jose from "jose";
+import * as dotenv from "dotenv";
 dotenv.config();
+
+const secret = new TextEncoder().encode(process.env.NEXT_PUBLIC_JWT_SECRET);
 
 interface User {
   email: string;
@@ -15,6 +19,7 @@ interface User {
 
 const SignIn = () => {
   const router = useRouter();
+  const { dispatch } = useAuth();
   const [formData, setFormData] = useState<User>({
     email: "",
     password: "",
@@ -34,23 +39,36 @@ const SignIn = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/login`, formData, {
-      withCredentials: true,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/login`,
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-      const data = await response.data;
+      const { accessToken } = response.data;
+      const { payload } = await jose.jwtVerify(accessToken, secret);
 
-      localStorage.setItem("accessToken", data.access_token);
+      dispatch({
+        type: "LOGIN",
+        accessToken: accessToken,
+        user: {
+          id: payload.sub,
+          name: payload.name,
+          email: payload.email,
+        },
+      });
 
       setFormData({
         email: "",
         password: "",
       });
 
-      router.push('/user/me')
+      router.push("/user/me");
     } catch (error) {
       console.error("Error:", error);
     }
