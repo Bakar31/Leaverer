@@ -7,24 +7,25 @@ import {
   Enum,
   Collection,
 } from '@mikro-orm/core';
-import { Post } from 'src/posts/posts.entity';
-import { Leave } from 'src/leaves/leaves.entity';
-import { Organization } from 'src/organizations/organizations.entity';
+import { Post } from '../posts/posts.entity';
+import { Leave } from '../leaves/leaves.entity';
+import { Organization } from '../organizations/organizations.entity';
 
 export enum UserRole {
+  SUPERADMIN = 'superAdmin',
   ADMIN = 'admin',
   USER = 'user',
 }
 
 @Entity({ tableName: 'users' })
 export class User {
-  @PrimaryKey()
+  @PrimaryKey({ autoincrement: true })
   id!: number;
 
-  @Property()
+  @Property({ fieldName: 'first_name' })
   firstName!: string;
 
-  @Property()
+  @Property({ fieldName: 'last_name' })
   lastName!: string;
 
   @Property({ type: 'varchar', length: 100, unique: true })
@@ -36,8 +37,8 @@ export class User {
   @Enum(() => UserRole)
   role: UserRole = UserRole.USER;
 
-  @ManyToOne(() => Organization)
-  organization!: Organization;
+  @ManyToOne(() => Organization, { nullable: true })
+  organization!: Organization | null;
 
   @OneToMany(() => Post, (post) => post.user)
   posts = new Collection<Post>(this);
@@ -45,9 +46,9 @@ export class User {
   @OneToMany(() => Leave, (leave) => leave.user)
   leaves = new Collection<Leave>(this);
 
-  @Property()
+  @Property({ fieldName: 'created_at' })
   createdAt: Date = new Date();
 
-  @Property()
+  @Property({ fieldName: 'updated_at' })
   updatedAt: Date = new Date();
 }

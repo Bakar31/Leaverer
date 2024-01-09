@@ -2,7 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { MikroORM } from '@mikro-orm/core';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './users.entity';
+import { User } from '../users/users.entity';
 import { UserRepository } from './users.repository';
 
 @Injectable()

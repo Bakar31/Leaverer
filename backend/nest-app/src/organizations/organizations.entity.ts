@@ -5,12 +5,12 @@ import {
   OneToMany,
   Collection,
 } from '@mikro-orm/core';
-import { User } from 'src/users/users.entity';
+import { User } from '../users/users.entity';
 
 @Entity()
 export class Organization {
   @PrimaryKey()
-  id!: string;
+  id!: number;
 
   @Property()
   name!: string;

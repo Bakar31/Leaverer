@@ -4,8 +4,10 @@ import React, { createContext, useReducer, useContext, Dispatch, useEffect } fro
 
 type User = {
   id: number;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  role: string;
 };
 
 type AuthState = {

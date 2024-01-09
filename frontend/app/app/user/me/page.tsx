@@ -7,8 +7,10 @@ import { useAuth } from "@/context/AuthContext";
 
 interface UserProfile {
   id: number;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  role: string;
 }
 
 const Profile = () => {
@@ -73,22 +75,35 @@ const Profile = () => {
       {authState.user ? (
         <div>
           <h1 className="text-2xl font-bold mb-4">
-            Welcome, {authState.user.name}
+            Welcome,{authState.user.firstName} {authState.user.lastName}
           </h1>
           <hr className="mb-4" />
           <div>
             {isEditing ? (
               <div>
                 <div className="mb-4">
-                  <label htmlFor="name" className="block mb-1 font-semibold">
-                    Name:
+                  <label htmlFor="firstName" className="block mb-1 font-semibold">
+                    First Name:
                   </label>
                   <input
                     type="text"
-                    name="name"
-                    id="name"
+                    name="firstName"
+                    id="firstName"
                     className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-primary-500"
-                    value={editedProfile?.name || ""}
+                    value={editedProfile?.firstName || ""}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div className="mb-4">
+                  <label htmlFor="lastName" className="block mb-1 font-semibold">
+                    Last Name:
+                  </label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    id="lastName"
+                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-primary-500"
+                    value={editedProfile?.lastName || ""}
                     onChange={handleInputChange}
                   />
                 </div>
@@ -124,8 +139,10 @@ const Profile = () => {
               <div className="flex flex-col gap-2">
                 <h2 className="font-semibold">Profile info:</h2>
                 <p className="mb-2">UserId: {authState.user.id}</p>
-                <p className="mb-2">Name: {authState.user.name}</p>
+                <p className="mb-2">First Name: {authState.user.firstName}</p>
+                <p className="mb-2">Last Name: {authState.user.lastName}</p>
                 <p className="mb-2">Email: {authState.user.email}</p>
+                <p className="mb-2">Role: {authState.user.role}</p>
                 <button
                   className="px-6 py-2 mt-4 text-black bg-green-300 rounded-md focus:outline-none hover:bg-primary-600"
                   onClick={handleEditButtonClick}

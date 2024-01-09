@@ -58,8 +58,10 @@ const SignIn = () => {
         accessToken: accessToken,
         user: {
           id: payload.sub,
-          name: payload.name,
+          firstName: payload.firstName,
+          lastName: payload.lastName,
           email: payload.email,
+          role: payload.role,
         },
       });
 
