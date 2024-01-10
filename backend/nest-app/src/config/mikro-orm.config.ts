@@ -20,4 +20,5 @@ export default defineConfig({
   metadataProvider: TsMorphMetadataProvider,
   // @ts-expect-error nestjs adapter option
   registerRequestContext: false,
+  allowGlobalContext: true,
 });

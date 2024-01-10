@@ -30,7 +30,6 @@ export class UserRepository {
 
   async update(id: number, data: Partial<User>): Promise<User> {
     const userRepository = this.orm.em.getRepository(User);
-    console.log(userRepository);
     const user = await userRepository.findOne({ id });
     console.log(user);
     if (!user) {

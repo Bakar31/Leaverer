@@ -9,7 +9,7 @@ import { User } from '../users/users.entity';
 
 @Entity()
 export class Organization {
-  @PrimaryKey()
+  @PrimaryKey({ autoincrement: true })
   id!: number;
 
   @Property()
@@ -24,9 +24,9 @@ export class Organization {
   @OneToMany(() => User, (user) => user.organization)
   users = new Collection<User>(this);
 
-  @Property()
+  @Property({ fieldName: 'created_at' })
   createdAt: Date = new Date();
 
-  @Property()
+  @Property({ fieldName: 'updated_at' })
   updatedAt: Date = new Date();
 }

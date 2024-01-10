@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -17,10 +17,14 @@ const Profile = () => {
   const { state: authState, dispatch } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [editedProfile, setEditedProfile] = useState<UserProfile | null>(null);
+
+  const superAdminClickHandler = () => {
+    router.push("/superadmin/createOrganization")
+  }
   const router = useRouter();
 
   const handleLogout = () => {
-    dispatch({ type: 'LOGOUT' });
+    dispatch({ type: "LOGOUT" });
     setEditedProfile(null);
     setIsEditing(false);
     router.push("/user/sign-in");
@@ -60,7 +64,7 @@ const Profile = () => {
       );
 
       dispatch({
-        type: 'UPDATE_USER',
+        type: "UPDATE_USER",
         user: response.data,
       });
 
@@ -77,12 +81,30 @@ const Profile = () => {
           <h1 className="text-2xl font-bold mb-4">
             Welcome,{authState.user.firstName} {authState.user.lastName}
           </h1>
+
+          {authState.user.role === "superAdmin" ? (
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={superAdminClickHandler}
+            >
+              Create Organization
+            </button>
+          ) : authState.user.role === "admin" ? (
+            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+              Create Employee
+            </button>
+          ) : (
+            <></>
+          )}
           <hr className="mb-4" />
           <div>
             {isEditing ? (
               <div>
                 <div className="mb-4">
-                  <label htmlFor="firstName" className="block mb-1 font-semibold">
+                  <label
+                    htmlFor="firstName"
+                    className="block mb-1 font-semibold"
+                  >
                     First Name:
                   </label>
                   <input
@@ -95,7 +117,10 @@ const Profile = () => {
                   />
                 </div>
                 <div className="mb-4">
-                  <label htmlFor="lastName" className="block mb-1 font-semibold">
+                  <label
+                    htmlFor="lastName"
+                    className="block mb-1 font-semibold"
+                  >
                     Last Name:
                   </label>
                   <input
