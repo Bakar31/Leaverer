@@ -11,10 +11,10 @@ import { Post } from '../posts/posts.entity';
 import { Leave } from '../leaves/leaves.entity';
 import { Organization } from '../organizations/organizations.entity';
 
-export enum UserRole {
+export enum EUserRole {
   SUPERADMIN = 'superAdmin',
-  ADMIN = 'admin',
-  USER = 'user',
+  MANAGER = 'manager',
+  EMPLOYEE = 'employee',
 }
 
 @Entity({ tableName: 'users' })
@@ -34,8 +34,8 @@ export class User {
   @Property({ type: 'varchar', length: 100 })
   password!: string;
 
-  @Enum(() => UserRole)
-  role: UserRole = UserRole.USER;
+  @Enum({ items: () => EUserRole })
+  role: EUserRole = EUserRole.EMPLOYEE;
 
   @ManyToOne(() => Organization, { nullable: true })
   organization!: Organization | null;

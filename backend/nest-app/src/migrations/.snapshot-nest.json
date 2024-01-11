@@ -63,11 +63,11 @@
           "mappedType": "datetime"
         }
       },
-      "name": "organization",
+      "name": "organizations",
       "schema": "public",
       "indexes": [
         {
-          "keyName": "organization_pkey",
+          "keyName": "organizations_pkey",
           "columnNames": [
             "id"
           ],
@@ -135,11 +135,11 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "default": "'user'",
+          "default": "'employee'",
           "enumItems": [
             "superAdmin",
-            "admin",
-            "user"
+            "manager",
+            "employee"
           ],
           "mappedType": "enum"
         },
@@ -206,7 +206,7 @@
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "public.organization",
+          "referencedTableName": "public.organizations",
           "deleteRule": "set null",
           "updateRule": "cascade"
         }
@@ -262,11 +262,11 @@
           "mappedType": "datetime"
         }
       },
-      "name": "post",
+      "name": "posts",
       "schema": "public",
       "indexes": [
         {
-          "keyName": "post_pkey",
+          "keyName": "posts_pkey",
           "columnNames": [
             "id"
           ],
@@ -277,12 +277,12 @@
       ],
       "checks": [],
       "foreignKeys": {
-        "post_user_id_foreign": {
-          "constraintName": "post_user_id_foreign",
+        "posts_user_id_foreign": {
+          "constraintName": "posts_user_id_foreign",
           "columnNames": [
             "user_id"
           ],
-          "localTableName": "public.post",
+          "localTableName": "public.posts",
           "referencedColumnNames": [
             "id"
           ],
@@ -369,11 +369,11 @@
           "mappedType": "datetime"
         }
       },
-      "name": "leave",
+      "name": "leaves",
       "schema": "public",
       "indexes": [
         {
-          "keyName": "leave_pkey",
+          "keyName": "leaves_pkey",
           "columnNames": [
             "id"
           ],
@@ -384,12 +384,12 @@
       ],
       "checks": [],
       "foreignKeys": {
-        "leave_user_id_foreign": {
-          "constraintName": "leave_user_id_foreign",
+        "leaves_user_id_foreign": {
+          "constraintName": "leaves_user_id_foreign",
           "columnNames": [
             "user_id"
           ],
-          "localTableName": "public.leave",
+          "localTableName": "public.leaves",
           "referencedColumnNames": [
             "id"
           ],

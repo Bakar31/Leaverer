@@ -1,7 +1,7 @@
 import { Entity, PrimaryKey, Property, ManyToOne } from '@mikro-orm/core';
 import { User } from '../users/users.entity';
 
-@Entity()
+@Entity({ tableName: 'posts' })
 export class Post {
   @PrimaryKey()
   id!: string;

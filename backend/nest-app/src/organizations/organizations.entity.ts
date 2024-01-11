@@ -7,7 +7,7 @@ import {
 } from '@mikro-orm/core';
 import { User } from '../users/users.entity';
 
-@Entity()
+@Entity({ tableName: 'organizations' })
 export class Organization {
   @PrimaryKey({ autoincrement: true })
   id!: number;

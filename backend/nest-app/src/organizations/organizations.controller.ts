@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { OrganizationService } from './organizations.service';
 import { Organization } from './organizations.entity';
 
@@ -9,6 +9,11 @@ export class OrganizationController {
   @Get()
   async organizations() {
     return this.organizationService.getAllOrgs();
+  }
+
+  @Get(':id')
+  async getUserById(@Param('id') id: string) {
+    return this.organizationService.getOrg(id);
   }
 
   @Post()

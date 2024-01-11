@@ -4,6 +4,7 @@ import { MikroORM } from '@mikro-orm/core';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from '../users/users.entity';
 import { UserRepository } from './users.repository';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -23,6 +24,10 @@ export class UsersService {
     } else {
       return this.userRepository.findOneByEmail(identifier);
     }
+  }
+
+  create(createUserDto: CreateUserDto) {
+    return this.userRepository.create(createUserDto);
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

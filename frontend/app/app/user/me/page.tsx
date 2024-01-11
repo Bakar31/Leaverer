@@ -13,14 +13,28 @@ interface UserProfile {
   role: string;
 }
 
+interface Organization {
+  name: string;
+  address: string;
+}
+
 const Profile = () => {
   const { state: authState, dispatch } = useAuth();
+  const [org, setOrg] = useState<Organization>({
+    name: "",
+    address: "",
+  });
   const [isEditing, setIsEditing] = useState(false);
   const [editedProfile, setEditedProfile] = useState<UserProfile | null>(null);
 
   const superAdminClickHandler = () => {
-    router.push("/superadmin/createOrganization")
-  }
+    router.push("/superadmin/createOrganization");
+  };
+
+  const managerClickHandler = () => {
+    router.push("/manager/createEmployee");
+  };
+
   const router = useRouter();
 
   const handleLogout = () => {
@@ -37,6 +51,31 @@ const Profile = () => {
     }
     setEditedProfile(authState.user);
   }, [authState.isAuthenticated, authState.user, router]);
+
+  useEffect(() => {
+    const getOrg = async () => {
+      try {
+        if (authState.user?.role === "superAdmin") {
+          return;
+        }
+
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/organizations/${authState.user?.organization}`
+        );
+
+        if (response.status === 200) {
+          const data = await response.data;
+          console.log(data);
+        } else {
+          console.error("Failed to fetch Org");
+        }
+      } catch (error) {
+        console.error("Error fetching organization:", error);
+      }
+    };
+
+    getOrg();
+  }, [authState.user]);
 
   const handleEditButtonClick = () => {
     setIsEditing(true);
@@ -89,8 +128,11 @@ const Profile = () => {
             >
               Create Organization
             </button>
-          ) : authState.user.role === "admin" ? (
-            <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+          ) : authState.user.role === "manager" ? (
+            <button
+              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+              onClick={managerClickHandler}
+            >
               Create Employee
             </button>
           ) : (
@@ -168,6 +210,14 @@ const Profile = () => {
                 <p className="mb-2">Last Name: {authState.user.lastName}</p>
                 <p className="mb-2">Email: {authState.user.email}</p>
                 <p className="mb-2">Role: {authState.user.role}</p>
+
+                {authState.user.role !== "superAdmin" && (
+                  <div>
+                    <h2 className="font-semibold">Organization info:</h2>
+                    <p className="mb-2">Organization Name: {org.name}</p>
+                    <p className="mb-2">Organization Address: {org.address}</p>
+                  </div>
+                )}
                 <button
                   className="px-6 py-2 mt-4 text-black bg-green-300 rounded-md focus:outline-none hover:bg-primary-600"
                   onClick={handleEditButtonClick}

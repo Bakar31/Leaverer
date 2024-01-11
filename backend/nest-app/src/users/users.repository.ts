@@ -28,6 +28,13 @@ export class UserRepository {
     return user;
   }
 
+  async create(data: Partial<User>): Promise<User> {
+    const userRepository = this.orm.em.getRepository(User);
+    const user = userRepository.create(data);
+    await userRepository.persistAndFlush(user);
+    return user;
+  }
+
   async update(id: number, data: Partial<User>): Promise<User> {
     const userRepository = this.orm.em.getRepository(User);
     const user = await userRepository.findOne({ id });

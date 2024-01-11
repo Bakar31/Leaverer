@@ -1,6 +1,6 @@
 import { EntityManager } from '@mikro-orm/core';
 import { Seeder } from '@mikro-orm/seeder';
-import { User, UserRole } from '../users/users.entity';
+import { User, EUserRole } from '../users/users.entity';
 
 export class DatabaseSeeder extends Seeder {
   async run(em: EntityManager): Promise<void> {
@@ -9,7 +9,7 @@ export class DatabaseSeeder extends Seeder {
       lastName: 'admin',
       email: 'superadmin@sazim.io',
       password: 'superpass',
-      role: UserRole.SUPERADMIN,
+      role: EUserRole.SUPERADMIN,
       organization: null,
     });
   }

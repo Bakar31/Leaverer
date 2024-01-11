@@ -62,6 +62,7 @@ const SignIn = () => {
           lastName: payload.lastName,
           email: payload.email,
           role: payload.role,
+          organization: payload.organization ? payload.organization.id : null,
         },
       });
 
