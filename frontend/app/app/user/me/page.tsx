@@ -65,7 +65,7 @@ const Profile = () => {
 
         if (response.status === 200) {
           const data = await response.data;
-          console.log(data);
+          setOrg(data)
         } else {
           console.error("Failed to fetch Org");
         }
