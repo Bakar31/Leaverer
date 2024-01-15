@@ -22,6 +22,24 @@ export class PostsService {
   }
 
   async getPostsForUser(user: User): Promise<Post[]> {
-    return this.postRepository.find({ user });
+    const organizationId = user.organization;
+
+    if (!organizationId) {
+      return [];
+    }
+
+    try {
+      return this.postRepository.find(
+        {
+          user: {
+            organization: organizationId,
+          },
+        },
+        { populate: ['user'] },
+      );
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+      return [];
+    }
   }
 }

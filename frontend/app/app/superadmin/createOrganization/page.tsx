@@ -5,12 +5,6 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 
-export enum EUserRole {
-  SUPERADMIN = "superAdmin",
-  MANAGER = "manager",
-  EMPLOYEE = "employee",
-}
-
 const RegisterOrganization = () => {
   const router = useRouter();
   const { state: authState, dispatch } = useAuth();
@@ -24,7 +18,7 @@ const RegisterOrganization = () => {
     lastName: "",
     email: "",
     password: "",
-    role: "employee",
+    role: "manager",
     organization: "",
   });
 
@@ -80,14 +74,13 @@ const RegisterOrganization = () => {
         );
       }
 
-      router.push("/");
+      router.push("/superadmin");
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
   return (
-    // <section className="bg-base-80">
     <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto">
       <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0">
         <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
@@ -149,7 +142,14 @@ const RegisterOrganization = () => {
                 onChange={handleChange}
               />
             </div>
-
+            <div>
+              <label
+                htmlFor="managerinfo"
+                className="block mb-2 text-lg font-medium text-gray-900"
+              >
+                Manager Info:
+              </label>
+            </div>
             <div>
               <label
                 htmlFor="firstName"
@@ -219,26 +219,6 @@ const RegisterOrganization = () => {
               />
             </div>
 
-            <div>
-              <label
-                htmlFor="role"
-                className="block mb-2 text-sm font-medium text-gray-900"
-              >
-                Role
-              </label>
-              <select
-                name="role"
-                id="role"
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                value={userData.role}
-                onChange={handleChange}
-              >
-                <option value={EUserRole.EMPLOYEE}>Employee</option>
-                <option value={EUserRole.MANAGER}>Manager</option>
-                <option value={EUserRole.SUPERADMIN}>Super Admin</option>
-              </select>
-            </div>
-
             <button
               type="submit"
               className="w-full text-black bg-green-400 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600"
@@ -249,7 +229,6 @@ const RegisterOrganization = () => {
         </div>
       </div>
     </div>
-    // </section>
   );
 };
 

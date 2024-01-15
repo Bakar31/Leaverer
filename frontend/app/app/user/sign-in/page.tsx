@@ -71,7 +71,7 @@ const SignIn = () => {
         password: "",
       });
 
-      router.push("/user/me");
+      router.push("/");
     } catch (error) {
       console.error("Error:", error);
     }
