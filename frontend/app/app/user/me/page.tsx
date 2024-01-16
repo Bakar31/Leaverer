@@ -27,9 +27,7 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedProfile, setEditedProfile] = useState<UserProfile | null>(null);
 
-  const managerClickHandler = () => {
-    router.push("/manager/createEmployee");
-  };
+  
 
   const router = useRouter();
 
@@ -116,17 +114,6 @@ const Profile = () => {
           <h1 className="text-2xl font-bold mb-4">
             Welcome,{authState.user.firstName} {authState.user.lastName}
           </h1>
-
-          {authState.user.role === "manager" ? (
-            <button
-              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-              onClick={managerClickHandler}
-            >
-              Create Employee
-            </button>
-          ) : (
-            <></>
-          )}
           <hr className="mb-4" />
           <div>
             {isEditing ? (

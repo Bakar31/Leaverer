@@ -5,10 +5,6 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 
-export enum EUserRole {
-  EMPLOYEE = "employee",
-}
-
 const CreateOrganization = () => {
   const router = useRouter();
   const { state: authState, dispatch } = useAuth();
@@ -130,24 +126,6 @@ const CreateOrganization = () => {
                 required
                 onChange={handleChange}
               />
-            </div>
-
-            <div>
-              <label
-                htmlFor="role"
-                className="block mb-2 text-sm font-medium text-gray-900"
-              >
-                Role
-              </label>
-              <select
-                name="role"
-                id="role"
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                value={userData.role}
-                onChange={handleChange}
-              >
-                <option value={EUserRole.EMPLOYEE}>Employee</option>
-              </select>
             </div>
 
             <button

@@ -33,7 +33,7 @@ const SuperAdminHome = () => {
 
       const organizationsWithEmployeesNumber = data.map((org: any) => ({
         ...org,
-        employees: org.users.length,
+        // employees: org.users.length,
       }));
       setOrgs(organizationsWithEmployeesNumber);
     } catch (error) {

@@ -33,4 +33,22 @@ export class UsersService {
   update(id: number, updateUserDto: UpdateUserDto) {
     return this.userRepository.update(id, updateUserDto);
   }
+
+  async getEmployeesForManager(organizationId: number): Promise<User[]> {
+    if (!organizationId) {
+      return [];
+    }
+
+    try {
+      return this.userRepository.find(
+        {
+          organization: organizationId,
+        },
+        { populate: ['organization'] },
+      );
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+      return [];
+    }
+  }
 }
