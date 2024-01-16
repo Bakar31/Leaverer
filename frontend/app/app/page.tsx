@@ -5,6 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import axios from "axios";
 import SuperAdminHome from "@/components/Home/superAdminHome";
 import ManagerHome from "@/components/Home/managerHome";
+import EmployeeHome from "@/components/Home/employeeHome";
 
 export default function Home() {
   const { state: authState, dispatch } = useAuth();
@@ -88,10 +89,12 @@ export default function Home() {
         <div className="container mx-auto my-8 gap-2">
           {authState.user.role === "superAdmin" ? (
             <SuperAdminHome />
-          ) : (
+          ) : authState.user.role === "manager" ? (
             <>
-              <ManagerHome/>
+              <ManagerHome />
             </>
+          ) : (
+            <EmployeeHome />
           )}
         </div>
       )}
