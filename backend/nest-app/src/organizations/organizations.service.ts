@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { MikroORM } from '@mikro-orm/core';
 import { Organization } from './organizations.entity';
-import { OrganizationRepository } from './organizations.repository';
+import {
+  OrganizationRepository,
+  OrganizationWithEmployeeCount,
+} from './organizations.repository';
 
 @Injectable()
 export class OrganizationService {
@@ -10,12 +13,16 @@ export class OrganizationService {
     this.organizationRepository = new OrganizationRepository(this.orm);
   }
 
-  async getAllOrgs(): Promise<Organization[]> {
+  async getAllOrgs(): Promise<OrganizationWithEmployeeCount[]> {
     return this.organizationRepository.findAll();
   }
 
   async getOrg(id: string) {
     return this.organizationRepository.findOneById(+id);
+  }
+
+  async getOrgManager(id: string) {
+    return this.organizationRepository.findManager(+id);
   }
 
   async create(data: Partial<Organization>): Promise<Organization> {

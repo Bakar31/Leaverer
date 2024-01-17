@@ -16,6 +16,11 @@ export class OrganizationController {
     return this.organizationService.getOrg(id);
   }
 
+  @Get(':id/manager')
+  async getOrgManager(@Param('id') id: string) {
+    return this.organizationService.getOrgManager(id);
+  }
+
   @Post()
   async createOrganization(@Body() data: Partial<Organization>) {
     return this.organizationService.create(data);

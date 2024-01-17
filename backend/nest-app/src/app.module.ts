@@ -12,6 +12,7 @@ import { OrganizationsModule } from './organizations/organizations.module';
 import mikroOrmConfig from './config/mikro-orm.config';
 import { OrganizationService } from './organizations/organizations.service';
 import { PostsModule } from './posts/posts.module';
+import { LeavesModule } from './leaves/leaves.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { PostsModule } from './posts/posts.module';
     MikroOrmModule.forFeature({ entities: [User, Organization, Leave, Post] }),
     OrganizationsModule,
     PostsModule,
+    LeavesModule,
   ],
   controllers: [OrganizationController],
   providers: [UsersService, OrganizationService],

@@ -15,7 +15,6 @@ interface Organization {
 const SuperAdminHome = () => {
   const router = useRouter();
   const [orgs, setOrgs] = useState<Organization[]>([]);
-
   const superAdminClickHandler = () => {
     router.push("/superadmin/createOrganization");
   };
@@ -33,9 +32,10 @@ const SuperAdminHome = () => {
 
       const organizationsWithEmployeesNumber = data.map((org: any) => ({
         ...org,
-        // employees: org.users.length,
+        employees: org.employeesCount,
       }));
       setOrgs(organizationsWithEmployeesNumber);
+      
     } catch (error) {
       console.error("Error fetching users:", error);
     }
@@ -44,7 +44,7 @@ const SuperAdminHome = () => {
   return (
     <div>
       <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-4"
         onClick={superAdminClickHandler}
       >
         Create Organization
