@@ -1,6 +1,18 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 const Navbar = () => {
+  const router = useRouter();
+  const { state: authState, dispatch } = useAuth();
+
+  const handleLogout = () => {
+    dispatch({ type: "LOGOUT" });
+    router.push("/user/sign-in");
+  };
+
   return (
     <div className="navbar bg-base-100">
       <div className="navbar-start">
@@ -25,15 +37,24 @@ const Navbar = () => {
             tabIndex={0}
             className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
           >
-            <li>
-              <Link href="/">Home</Link>
-            </li>
-            <li>
-              <Link href="/user/me">Profile</Link>
-            </li>
-            <li>
-              <Link href="/user/sign-in">Login</Link>
-            </li>
+            {authState.user && (
+              <>
+                <li>
+                  <Link href="/">Home</Link>
+                </li>
+                <li>
+                  <Link href="/user/me">Profile</Link>
+                </li>
+                <li>
+                  <button onClick={handleLogout}>Logout</button>
+                </li>
+              </>
+            )}
+            {!authState.user && (
+              <li>
+                <Link href="/user/sign-in">Login</Link>
+              </li>
+            )}
           </ul>
         </div>
       </div>

@@ -26,9 +26,6 @@ const Profile = () => {
   });
   const [isEditing, setIsEditing] = useState(false);
   const [editedProfile, setEditedProfile] = useState<UserProfile | null>(null);
-
-  
-
   const router = useRouter();
 
   const handleLogout = () => {
