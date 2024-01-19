@@ -7,6 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import axios from "axios";
 import Avatar from "react-avatar";
 import { formatDistanceToNow } from "date-fns";
+import Link from "next/link";
 
 const ManagerHome = () => {
   const router = useRouter();
@@ -16,13 +17,16 @@ const ManagerHome = () => {
     content: "",
   });
   const [userPosts, setUserPosts] = useState([]);
+  const [numLeaves, setNumLeaves] = useState<number>(0);
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [absentEmployeesNames, setAbsentEmployeesNames] = useState<string>("");
 
   const managerClickHandler = () => {
     router.push("/manager/manageEmployee");
   };
 
   useEffect(() => {
-    Modal.setAppElement('main');
+    Modal.setAppElement("main");
     if (authState.user) {
       getPostsForUser(authState.user);
     }
@@ -57,7 +61,9 @@ const ManagerHome = () => {
 
       if (response.status === 201) {
         closeModal();
-        getPostsForUser(authState.user);
+        if (authState.user) {
+          getPostsForUser(authState.user);
+        }
       }
     } catch (error) {
       console.error("Error:", error);
@@ -91,8 +97,73 @@ const ManagerHome = () => {
       console.error("Error:", error);
     }
   };
+
+  useEffect(() => {
+    if (authState.user) {
+      fetchPendingLeavesForManager(authState.user.id);
+    }
+  }, [authState.user]);
+
+  const fetchPendingLeavesForManager = async (managerId: number | null) => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/leaves/manager/${managerId}/pending`,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.data;
+      setNumLeaves(data.length);
+      setShowAlert(true);
+    } catch (error) {
+      console.error("Error fetching leaves:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (authState.user) {
+      fetchAbsentEmployees(authState.user.organization);
+    }
+  }, [authState.user]);
+
+  const fetchAbsentEmployees = async (organizationId: number | null) => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/leaves/${organizationId}/absent-today`,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.data;
+      const names = data
+        .map((employee: { employeeName: any }) => `${employee.employeeName}`)
+        .join(", ");
+      setAbsentEmployeesNames(names);
+    } catch (error) {
+      console.error("Error fetching leaves:", error);
+    }
+  };
+
   return (
     <div>
+      {showAlert && (
+        <div className="bg-blue-200 p-4 text-blue-800 mb-4">
+          Number of pending leaves: {numLeaves}{" "}
+          <Link href={"/manager/leaveRequests"}>See all</Link>
+        </div>
+      )}
+
+      {absentEmployeesNames && (
+        <div className="bg-red-200 p-4 text-red-800 mb-4">
+          Absent Employees: {absentEmployeesNames}
+        </div>
+      )}
       <div className="flex gap-2">
         <button
           className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-700 focus:outline-none focus:shadow-outline-blue"

@@ -74,7 +74,7 @@ const RegisterOrganization = () => {
         );
       }
 
-      router.push("/superadmin");
+      router.push("/");
     } catch (error) {
       console.error("Error:", error);
     }

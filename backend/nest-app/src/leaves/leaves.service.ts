@@ -1,60 +1,65 @@
-import { EntityManager } from '@mikro-orm/core';
 import { Injectable } from '@nestjs/common';
-import { User } from '../users/users.entity';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { Leave, LeaveStatus } from './leaves.entity';
-import { Notification } from './notification.entity';
 
 @Injectable()
 export class LeavesService {
-  private em: EntityManager;
+  constructor(
+    @InjectRepository(Leave)
+    private readonly leaveRepository: EntityRepository<Leave>,
+    private readonly em: EntityManager,
+  ) {}
 
-  constructor(entityManager: EntityManager) {
-    this.em = entityManager;
+  async createLeaveRequests(leaveRequestsData: any[]): Promise<Leave[]> {
+    const dataArray = Array.isArray(leaveRequestsData)
+      ? leaveRequestsData
+      : [leaveRequestsData];
+    const leaveRequests = dataArray.map((leaveRequestData) =>
+      this.em.create(Leave, leaveRequestData),
+    );
+
+    await this.leaveRepository.persistAndFlush(leaveRequests);
+    return leaveRequests;
   }
 
-  async requestLeave(
-    user: User,
-    manager: User,
-    date: Date,
-    type: string,
-    reason?: string,
-  ): Promise<void> {
-    const leave = new Leave();
-    leave.user = user;
-    leave.approvedBy = manager;
-    leave.date = date;
-    leave.type = type;
-    leave.reason = reason;
-
-    const managerNotification = new Notification();
-    managerNotification.sender = user;
-    managerNotification.receiver = manager;
-    managerNotification.message = `Leave request from ${user.firstName} for ${date}`;
-
-    await this.em.persistAndFlush([leave, managerNotification]);
+  async getPendingLeaveRequestsForEmployee(userId: number): Promise<Leave[]> {
+    return this.leaveRepository.find({
+      user: userId,
+      status: LeaveStatus.PENDING,
+    });
   }
 
-  async approveLeave(leaveId: string): Promise<void> {
-    const leave = await this.em.findOneOrFail(Leave, leaveId);
-    leave.status = LeaveStatus.APPROVED;
-
-    const userNotification = new Notification();
-    userNotification.sender = leave.approvedBy;
-    userNotification.receiver = leave.user;
-    userNotification.message = `Leave request approved for ${leave.date}`;
-
-    await this.em.persistAndFlush([leave, userNotification]);
+  async getPendingLeaveRequestsForManager(managerId: number): Promise<Leave[]> {
+    return this.leaveRepository.find({
+      manager: managerId,
+      status: LeaveStatus.PENDING,
+    });
   }
 
-  async rejectLeave(leaveId: string): Promise<void> {
-    const leave = await this.em.findOneOrFail(Leave, leaveId);
-    leave.status = LeaveStatus.REJECTED;
+  async updateLeaveStatus(
+    leaveId: string,
+    status: LeaveStatus,
+  ): Promise<Leave> {
+    const leave = await this.leaveRepository.findOneOrFail(leaveId);
+    leave.status = status;
+    await this.leaveRepository.flush();
+    return leave;
+  }
 
-    const userNotification = new Notification();
-    userNotification.sender = leave.approvedBy;
-    userNotification.receiver = leave.user;
-    userNotification.message = `Leave request rejected for ${leave.date}`;
+  async getAbsentEmployees(date: Date, organizationId: number) {
+    const today = new Date(date.toDateString());
 
-    await this.em.persistAndFlush([leave, userNotification]);
+    const approvedLeaves = await this.leaveRepository.find({
+      date: today,
+      status: LeaveStatus.APPROVED,
+      user: { organization: organizationId },
+    });
+    await this.leaveRepository.populate(approvedLeaves, ['user']);
+
+    return approvedLeaves.map((leave) => ({
+      employeeId: leave.user.id,
+      employeeName: `${leave.user.firstName} ${leave.user.lastName}`,
+    }));
   }
 }

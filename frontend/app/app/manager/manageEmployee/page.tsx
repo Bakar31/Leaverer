@@ -12,7 +12,7 @@ interface Employee {
   email: string;
 }
 
-const Employees = () => {
+const ManageEmployees = () => {
   const router = useRouter();
   const { state: authState, dispatch } = useAuth();
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -57,7 +57,7 @@ const Employees = () => {
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
       <button
-        className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-700 focus:outline-none focus:shadow-outline-blue"
+        className="bg-green-500 text-white py-2 px-4 m-2 rounded hover:bg-green-700 focus:outline-none focus:shadow-outline-blue"
         onClick={managerClickHandler}
       >
         Create Employees
@@ -107,4 +107,4 @@ const Employees = () => {
   );
 };
 
-export default Employees;
+export default ManageEmployees;

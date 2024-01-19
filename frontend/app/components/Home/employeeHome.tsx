@@ -16,6 +16,7 @@ const EmployeeHome = () => {
     content: "",
   });
   const [userPosts, setUserPosts] = useState([]);
+  const [absentEmployeesNames, setAbsentEmployeesNames] = useState<string>("");
 
   const askLeaveClickHandler = () => {
     router.push("/employee/askLeave");
@@ -91,8 +92,41 @@ const EmployeeHome = () => {
       console.error("Error:", error);
     }
   };
+
+  useEffect(() => {
+    if (authState.user) {
+      fetchAbsentEmployees(authState.user.organization);
+    }
+  }, [authState.user]);
+
+  const fetchAbsentEmployees = async (organizationId: number | null) => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/leaves/${organizationId}/absent-today`,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.data;
+      const names = data
+        .map((employee: { employeeName: any }) => `${employee.employeeName}`)
+        .join(", ");
+      setAbsentEmployeesNames(names);
+    } catch (error) {
+      console.error("Error fetching leaves:", error);
+    }
+  };
+
   return (
     <div>
+      {absentEmployeesNames && (
+        <div className="bg-red-200 p-4 text-red-800 mb-4">
+          Absent Employees: {absentEmployeesNames}
+        </div>
+      )}
       <div className="flex gap-2">
         <button
           className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue"

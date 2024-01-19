@@ -1,5 +1,6 @@
 import { Entity, PrimaryKey, Property, ManyToOne, Enum } from '@mikro-orm/core';
 import { User } from '../users/users.entity';
+import { v4 as uuidv4 } from 'uuid';
 
 export enum LeaveStatus {
   PENDING = 'pending',
@@ -7,16 +8,21 @@ export enum LeaveStatus {
   REJECTED = 'rejected',
 }
 
+export enum LeaveType {
+  PTO = 'PTO',
+  SICK_LEAVE = 'SickLeave',
+}
+
 @Entity({ tableName: 'leaves' })
 export class Leave {
-  @PrimaryKey()
-  id!: string;
+  @PrimaryKey({ type: 'uuid' })
+  id: string = uuidv4();
 
   @ManyToOne(() => User)
   user!: User;
 
   @Property({ fieldName: 'approved_by' })
-  approvedBy!: User;
+  manager!: number;
 
   @Property()
   date!: Date;
@@ -24,8 +30,8 @@ export class Leave {
   @Enum({ items: () => LeaveStatus })
   status: LeaveStatus = LeaveStatus.PENDING;
 
-  @Property()
-  type!: string;
+  @Enum({ items: () => LeaveType })
+  type: LeaveType;
 
   @Property()
   reason?: string;
@@ -35,4 +41,8 @@ export class Leave {
 
   @Property({ fieldName: 'updated_at' })
   updatedAt: Date = new Date();
+
+  constructor(data: Partial<Leave>) {
+    Object.assign(this, data);
+  }
 }
