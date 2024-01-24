@@ -6,9 +6,11 @@ import { eachDayOfInterval } from "date-fns";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const AskLeave = () => {
   const { state: authState, dispatch } = useAuth();
+  const router = useRouter();
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [type, setType] = useState("");
@@ -73,7 +75,7 @@ const AskLeave = () => {
         reason,
       }));
 
-      console.log(leaveRequestsData);
+      router.push('/')
 
       try {
         const leaveResponses = await Promise.all(

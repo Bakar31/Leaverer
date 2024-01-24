@@ -155,7 +155,7 @@ const ManagerHome = () => {
       {showAlert && (
         <div className="bg-blue-200 p-4 text-blue-800 mb-4">
           Number of pending leaves: {numLeaves}{" "}
-          <Link href={"/manager/leaveRequests"}>See all</Link>
+          <Link href={"/manager/leaveRequests"} className="text-sm underline">See all</Link>
         </div>
       )}
 
@@ -183,6 +183,17 @@ const ManagerHome = () => {
         isOpen={isModalOpen}
         onRequestClose={closeModal}
         contentLabel="Create Post Modal"
+        style={{
+          overlay: {
+            backgroundColor: 'rgba(169, 169, 169, 0.75)',
+          },
+          content: {
+            width: '40%',
+            margin: 'auto',
+            maxHeight: '40%',
+            overflow: 'auto',
+          },
+        }}
       >
         <div className="p-4">
           <h2 className="text-2xl font-bold mb-4">Create Post</h2>
@@ -219,7 +230,7 @@ const ManagerHome = () => {
               <div className="flex-shrink-0 mr-4">
                 <Avatar
                   name={`${post.user?.firstName} ${post.user?.lastName}`}
-                  size="40"
+                  size="35"
                   round
                 />
               </div>
@@ -229,13 +240,13 @@ const ManagerHome = () => {
                     {post.user?.firstName} {post.user?.lastName}
                   </p>
                   <p className="text-xs text-gray-500">
-                    Created{" "}
+                    Posted{" "}
                     {formatDistanceToNow(new Date(post.createdAt), {
                       addSuffix: true,
                     })}
                   </p>
                 </div>
-                <p className="text-lg">{post.body}</p>
+                <p className="text-md">{post.body}</p>
               </div>
             </div>
           ))}

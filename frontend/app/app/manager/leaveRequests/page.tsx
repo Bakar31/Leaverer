@@ -1,9 +1,9 @@
-"use client";
+"use client"
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import axios from "axios";
-import { format } from 'date-fns';
+import { format } from "date-fns";
 
 interface Leave {
   id: string;
@@ -67,36 +67,45 @@ const LeaveRequests = () => {
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4">Leave Requests</h1>
-      {pendingLeaves.map((leave) => (
-        <div key={leave.id} className="border p-4 mb-4">
-          <h2 className="text-lg font-semibold mb-2">
-            {leave.user.firstName} {leave.user.lastName}
-          </h2>
-          <p>
-            <strong>Date:</strong> {format(new Date(leave.date), 'yyyy-MM-dd')}
-          </p>
-          <p>
-            <strong>Type:</strong> {leave.type}
-          </p>
-          <p>
-            <strong>Cause:</strong> {leave.reason}
-          </p>
-          <div className="mt-4">
-            <button
-              className="bg-green-500 text-white py-2 px-4 rounded mr-2"
-              onClick={() => handleApproveReject(leave.id, "approve")}
-            >
-              Approve
-            </button>
-            <button
-              className="bg-red-500 text-white py-2 px-4 rounded"
-              onClick={() => handleApproveReject(leave.id, "reject")}
-            >
-              Reject
-            </button>
-          </div>
-        </div>
-      ))}
+      <table className="w-full border-collapse border border-gray-300">
+        <thead>
+          <tr>
+            <th className="border border-gray-300 p-2">Name</th>
+            <th className="border border-gray-300 p-2">Date</th>
+            <th className="border border-gray-300 p-2">Type</th>
+            <th className="border border-gray-300 p-2">Reason</th>
+            <th className="border border-gray-300 p-2">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {pendingLeaves.map((leave) => (
+            <tr key={leave.id}>
+              <td className="border border-gray-300 p-2">
+                {leave.user.firstName} {leave.user.lastName}
+              </td>
+              <td className="border border-gray-300 p-2">
+                {format(new Date(leave.date), "yyyy-MM-dd")}
+              </td>
+              <td className="border border-gray-300 p-2">{leave.type}</td>
+              <td className="border border-gray-300 p-2">{leave.reason}</td>
+              <td className="border border-gray-300 p-2 text-center">
+                <button
+                  className="bg-green-500 text-white py-2 px-4 rounded mr-2"
+                  onClick={() => handleApproveReject(leave.id, "approve")}
+                >
+                  Approve
+                </button>
+                <button
+                  className="bg-red-500 text-white py-2 px-4 rounded"
+                  onClick={() => handleApproveReject(leave.id, "reject")}
+                >
+                  Reject
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

@@ -146,6 +146,17 @@ const EmployeeHome = () => {
         isOpen={isModalOpen}
         onRequestClose={closeModal}
         contentLabel="Create Post Modal"
+        style={{
+          overlay: {
+            backgroundColor: "rgba(169, 169, 169, 0.75)",
+          },
+          content: {
+            width: "40%",
+            margin: "auto",
+            maxHeight: "40%",
+            overflow: "auto",
+          },
+        }}
       >
         <div className="p-4">
           <h2 className="text-2xl font-bold mb-4">Create Post</h2>
@@ -182,7 +193,7 @@ const EmployeeHome = () => {
               <div className="flex-shrink-0 mr-4">
                 <Avatar
                   name={`${post.user?.firstName} ${post.user?.lastName}`}
-                  size="40"
+                  size="35"
                   round
                 />
               </div>
@@ -192,7 +203,7 @@ const EmployeeHome = () => {
                     {post.user?.firstName} {post.user?.lastName}
                   </p>
                   <p className="text-xs text-gray-500">
-                    Created{" "}
+                    Posted{" "}
                     {formatDistanceToNow(new Date(post.createdAt), {
                       addSuffix: true,
                     })}

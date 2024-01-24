@@ -87,12 +87,6 @@ const ManageEmployees = () => {
               </td>
               <td className="px-6 py-4">
                 <button
-                  onClick={() => handleEdit(employee.id)}
-                  className="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-2"
-                >
-                  Edit
-                </button>
-                <button
                   onClick={() => handleDelete(employee.id)}
                   className="font-medium text-red-600 dark:text-red-500 hover:underline"
                 >
