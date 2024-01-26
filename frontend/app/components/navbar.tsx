@@ -57,11 +57,11 @@ const Navbar = () => {
         </div>
       </div>
       <div className="navbar-center">
-        <a className="btn btn-ghost text-xl">Leaverer</a>
+        <a className="btn btn-ghost text-xl text-white">Leaverer</a>
       </div>
       <div className="navbar-end">
         {authState.user && (
-          <Link href={"user/me"}>
+          <Link href={"/user/me"}>
             <Avatar
               name={`${authState.user.firstName} ${authState.user.lastName}`}
               size="30"

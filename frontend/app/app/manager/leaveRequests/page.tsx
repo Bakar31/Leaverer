@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
@@ -67,28 +67,42 @@ const LeaveRequests = () => {
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4">Leave Requests</h1>
-      <table className="w-full border-collapse border border-gray-300">
-        <thead>
+      <table className="w-full text-sm text-left rtl:text-right text-gray-500">
+        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
           <tr>
-            <th className="border border-gray-300 p-2">Name</th>
-            <th className="border border-gray-300 p-2">Date</th>
-            <th className="border border-gray-300 p-2">Type</th>
-            <th className="border border-gray-300 p-2">Reason</th>
-            <th className="border border-gray-300 p-2">Actions</th>
+            <th scope="col" className="px-6 py-3">
+              Name
+            </th>
+            <th scope="col" className="px-6 py-3">
+              Date
+            </th>
+            <th scope="col" className="px-6 py-3">
+              Type
+            </th>
+            <th scope="col" className="px-6 py-3">
+              Reason
+            </th>
+            <th scope="col" className="px-6 py-3">
+              Actions
+            </th>
           </tr>
         </thead>
         <tbody>
           {pendingLeaves.map((leave) => (
             <tr key={leave.id}>
-              <td className="border border-gray-300 p-2">
+              <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                 {leave.user.firstName} {leave.user.lastName}
               </td>
-              <td className="border border-gray-300 p-2">
+              <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                 {format(new Date(leave.date), "yyyy-MM-dd")}
               </td>
-              <td className="border border-gray-300 p-2">{leave.type}</td>
-              <td className="border border-gray-300 p-2">{leave.reason}</td>
-              <td className="border border-gray-300 p-2 text-center">
+              <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                {leave.type}
+              </td>
+              <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                {leave.reason}
+              </td>
+              <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                 <button
                   className="bg-green-500 text-white py-2 px-4 rounded mr-2"
                   onClick={() => handleApproveReject(leave.id, "approve")}

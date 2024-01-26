@@ -21,10 +21,6 @@ const ManageEmployees = () => {
     router.push("/manager/createEmployee");
   };
 
-  const handleEdit = (employeeId: number) => {
-    console.log(`Edit employee with ID ${employeeId}`);
-  };
-
   const handleDelete = (employeeId: number) => {
     console.log(`Delete employee with ID ${employeeId}`);
   };
