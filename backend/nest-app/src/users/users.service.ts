@@ -2,8 +2,9 @@
 import { Injectable } from '@nestjs/common';
 import { MikroORM } from '@mikro-orm/core';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './users.entity';
+import { User } from '../users/users.entity';
 import { UserRepository } from './users.repository';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -25,7 +26,29 @@ export class UsersService {
     }
   }
 
+  create(createUserDto: CreateUserDto) {
+    return this.userRepository.create(createUserDto);
+  }
+
   update(id: number, updateUserDto: UpdateUserDto) {
     return this.userRepository.update(id, updateUserDto);
+  }
+
+  async getEmployeesForManager(organizationId: number): Promise<User[]> {
+    if (!organizationId) {
+      return [];
+    }
+
+    try {
+      return this.userRepository.find(
+        {
+          organization: organizationId,
+        },
+        { populate: ['organization'] },
+      );
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+      return [];
+    }
   }
 }

@@ -5,6 +5,11 @@ import { NotFoundException } from '@nestjs/common';
 export class UserRepository {
   constructor(private readonly orm: MikroORM) {}
 
+  async find(query: object, options?: object): Promise<User[]> {
+    const userRepository = this.orm.em.getRepository(User);
+    return userRepository.find(query, options);
+  }
+
   async findAll(): Promise<User[]> {
     const userRepository = this.orm.em.getRepository(User);
     return userRepository.findAll();
@@ -28,9 +33,17 @@ export class UserRepository {
     return user;
   }
 
+  async create(data: Partial<User>): Promise<User> {
+    const userRepository = this.orm.em.getRepository(User);
+    const user = userRepository.create(data);
+    await userRepository.persistAndFlush(user);
+    return user;
+  }
+
   async update(id: number, data: Partial<User>): Promise<User> {
     const userRepository = this.orm.em.getRepository(User);
     const user = await userRepository.findOne({ id });
+    console.log(user);
     if (!user) {
       return null;
     }

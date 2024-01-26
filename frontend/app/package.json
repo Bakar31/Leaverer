@@ -9,18 +9,27 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@types/uuid": "^9.0.7",
     "axios": "^1.6.5",
+    "date-fns": "^3.2.0",
     "dotenv": "^16.3.1",
     "jose": "^5.2.0",
     "next": "14.0.4",
     "react": "^18",
-    "react-dom": "^18"
+    "react-avatar": "^5.0.3",
+    "react-datepicker": "^4.25.0",
+    "react-dom": "^18",
+    "react-modal": "^3.16.1",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
+    "@types/react-datepicker": "^4.19.5",
     "@types/react-dom": "^18",
+    "@types/react-modal": "^3.16.3",
     "autoprefixer": "^10.0.1",
+    "daisyui": "^4.6.0",
     "eslint": "^8",
     "eslint-config-next": "14.0.4",
     "postcss": "^8",
