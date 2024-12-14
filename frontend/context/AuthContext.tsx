@@ -1,6 +1,12 @@
 "use client";
 
-import React, { createContext, useReducer, useContext, Dispatch, useEffect } from "react";
+import React, {
+  createContext,
+  useReducer,
+  useContext,
+  Dispatch,
+  useEffect,
+} from "react";
 
 type User = {
   id: number;
@@ -61,12 +67,18 @@ const authReducer = (state: AuthState, action: Action): AuthState => {
 };
 
 export const AuthProvider: React.FC = ({ children }) => {
-  const storedAuthState = localStorage.getItem('authState');
-  const [state, dispatch] = useReducer(authReducer, storedAuthState ? JSON.parse(storedAuthState) : initialState);
+  const isBrowser = typeof window !== "undefined";
+  const storedAuthState = isBrowser ? localStorage.getItem("authState") : null;
+  const [state, dispatch] = useReducer(
+    authReducer,
+    storedAuthState ? JSON.parse(storedAuthState) : initialState
+  );
 
   useEffect(() => {
-    localStorage.setItem('authState', JSON.stringify(state));
-  }, [state]);
+    if (isBrowser) {
+      localStorage.setItem("authState", JSON.stringify(state));
+    }
+  }, [state, isBrowser]);
 
   return (
     <AuthContext.Provider value={{ state, dispatch }}>
