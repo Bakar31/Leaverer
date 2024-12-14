@@ -26,3 +26,9 @@ To learn
 - PostgreSQL
 - Tailwind Css
 - UI component library (Daisy UI)
+
+
+## Demo
+
+https://github.com/user-attachments/assets/543dc281-0caf-4350-bbea-3d5f83777c64
+
